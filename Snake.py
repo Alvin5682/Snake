@@ -2,6 +2,11 @@ import turtle
 import time
 import random
 from library import *
+def choosecolor():
+    red=random.random()
+    green=random.random()
+    blue=random.random()
+    return red,green,blue
 def goup():
     if head.direction!="down":
         head.direction="up"
@@ -48,7 +53,7 @@ screen.onkey(goright,"d")
 food=turtle.Turtle()
 food.speed(0)
 food.shape("circle")
-food.color("yellow")
+food.color(choosecolor())
 food.penup()
 food.shapesize(0.5,0.5)
 food.goto(0,0)
@@ -67,11 +72,24 @@ h = open ("highscore.txt", "r").readlines()[(0)]
 pen.clear()
 pen.write(f"Score:{score} High score: {highscore}",align="center",font=("Courier", 24, "normal")
 )
-
+timer=0
+randomfood=turtle.Turtle()
+randomfood.speed(0)
+randomfood.shape("triangle")
+randomfood.penup()
+randomfood.shapesize(1.1,1.1)
+randomfood.goto(10000,10000)
 while True:
     screen.update()
     move()
     time.sleep(delay)
+    randomnu=random.randint(1,50)
+    if randomnu==5 and randomfood.xcor()==10000:
+        timer=100
+        randomfood.color(choosecolor())
+        x1=random.randint(-290,290)
+        y1=random.randint(-290,290)
+        randomfood.goto(x1,y1)
     if head.xcor()>=275 or head.ycor()<=-295 or head.xcor()<=-275 or head.ycor()>=295:
         time.sleep(1)
         head.goto(0,0)
@@ -97,6 +115,7 @@ while True:
     if head.distance(food)<15:
         x=random.randint(-290,290)
         y=random.randint(-290,290)
+        food.color(choosecolor())
         food.goto(x,y)
         newturtle=turtle.Turtle()
         newturtle.speed(0)
@@ -113,6 +132,29 @@ while True:
         pen.clear()
         pen.write(f"Score:{score} High score: {highscore}",align="center",font=("Courier", 24, "normal")
 )
+    if head.distance(randomfood)<15:
+        randomfood.goto(10000,10000)
+        newturtle=turtle.Turtle()
+        newturtle.speed(0)
+        newturtle.shape("square")
+        newturtle.color("grey")
+        newturtle.penup()
+        length.append(newturtle)
+        newturtle1=turtle.Turtle()
+        newturtle1.speed(0)
+        newturtle1.shape("square")
+        newturtle1.color("grey")
+        newturtle1.penup()
+        length.append(newturtle1)
+        score=score+20
+        if score>int(highscore):
+            highscore=score
+            f=open("highscore.txt","w")
+            f.write(str(highscore))
+            f.close()
+        pen.clear()
+        pen.write(f"Score:{score} High score: {highscore}",align="center",font=("Courier", 24, "normal")
+)
     for i in range(len(length)-1,0,-1):
         x=length[i-1].xcor()
         y=length[i-1].ycor()
@@ -121,4 +163,7 @@ while True:
         x=head.xcor()
         y=head.ycor()
         length[0].goto(x,y)
+    if timer==0:
+        randomfood.goto(10000,10000)
+    timer=timer-1
 screen.exitonclick()
